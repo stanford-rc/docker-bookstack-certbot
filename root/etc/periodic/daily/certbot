@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "Running daily Certbot renewal check"
+exec /usr/bin/certbot renew --verbose --nginx \
+	--non-interactive \
+	--user-agent-comment 'bookstack-certbot'
+
