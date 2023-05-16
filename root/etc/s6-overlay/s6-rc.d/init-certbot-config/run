@@ -79,9 +79,9 @@ fi
 
 # Now we can run Certbot!
 
-certbot run --verbose --nginx \
+certbot run --verbose --non-interactive \
 	--agree-tos -m "${LETS_ENCRYPT_CONTACT}" -d ${CERTBOT_DOMAIN} \
-	--non-interactive \
+	--nginx --nginx-server-root /config/nginx \
 	--user-agent-comment 'bookstack-certbot'
 if [ $? -ne 0 ]; then
 	echo "ERROR: Certbot failed to run!"
