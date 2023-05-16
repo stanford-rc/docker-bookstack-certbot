@@ -1,0 +1,96 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+# vim: filetype=bash sw=4 ts=4 noet
+
+# Start by making directories in /config
+
+mkdir -p /config/letsencrypt
+mkdir -p /config/log/letsencrypt
+
+if [ -n "${TEST_RUN}" ]; then
+	echo '[certbot] mkdir done.'
+fi
+
+# Check for Let's Encrypt environment variables
+
+if [ -z "${LETS_ENCRYPT_CONTACT}" ]; then
+	echo "ERROR: You must set the LETS_ENCRYPT_CONTACT environment variable."
+	echo "Set this to an email address to receive important emails from Let's Encrypt."
+	exit 1
+fi
+
+if [ -z "${LETS_ENCRYPT_TOS_AGREE}" ]; then
+	echo "ERROR: You must set the LETS_ENCRYPT_TOS_AGREE environment variable."
+	echo "It must be set to the word 'yes'."
+	echo "This confirms that you agree to the Let's Encrypt Terms of Service."
+	exit 1
+fi
+
+if [ ! "${LETS_ENCRYPT_TOS_AGREE}" = "yes" ]; then
+	echo "ERROR: You must set LETS_ENCRYPTO_TOS_AGREE to the word 'yes'."
+	echo "You provided this response: ${LETS_ENCRYPT_TOS_AGREE}"
+	echo "It must be set to the word 'yes'."
+	echo "This confirms that you agree to the Let's Encrypt Terms of Service."
+	exit 1
+fi
+
+if [ -z "${APP_URL}" ]; then
+	echo "ERROR: You must set the APP_URL environment variable."
+	echo "It must be set to an https:// URL."
+	echo "The FQDN will be extracted from this URL, and used for Certbot."
+	exit 1
+fi
+
+if [[ ! "${APP_URL}" == https://* ]]; then
+	echo "ERROR: Your APP_URL must be an https:// URL."
+	echo "Let's Encrypt can only generate certs for https URLs."
+	exit 1
+fi
+
+# Strip the https:// prefix from the APP_URL, for further testing
+APP_URL_WITHOUT_PROTOCOL="${APP_URL/https:\/\/}"
+if [ -n "${TEST_RUN}" ]; then
+	echo "[certbot] APP_URL after prefix strip: ${APP_URL_WITHOUT_PROTOCOL}"
+fi
+
+# Test for any forward-slashes
+if [[ "${APP_URL_WITHOUT_PROTOCOL}" == */* ]]; then
+	echo "ERROR: APP_URL may not contain slashes."
+	echo "NOTE: We can only work with Bookstack installs hosted at the root of a domain."
+	exit 1
+fi
+
+if [ -n "${TEST_RUN}" ]; then
+	echo '[certbot] env check done'
+fi
+
+# Extract domain from APP_URL
+
+# APP_URL_WITHOUT_PROTOCOL contains the URL with "https://" removed.
+# Also, we already know there are no forward-slashes
+
+# If we have a port number in the URL, remove that
+CERTBOT_DOMAIN="${APP_URL_WITHOUT_PROTOCOL/:*/}"
+echo "Will request a Let's Encrypt cert for ${CERTBOT_DOMAIN}"
+
+if [ -n "${TEST_RUN}" ]; then
+	echo '[certbot] domain derivation complete'
+fi
+
+# Now we can run Certbot!
+
+certbot run --verbose --nginx \
+	--agree-tos -m "${LETS_ENCRYPT_CONTACT}" -d ${CERTBOT_DOMAIN} \
+	--non-interactive \
+	--user-agent-comment 'bookstack-certbot'
+if [ $? -ne 0 ]; then
+	echo "ERROR: Certbot failed to run!"
+	echo "Look at the logs above, fix the issue, and re-create your container."
+	exit 1
+fi
+
+# Done!
+
+if [ -n "${TEST_RUN}" ]; then
+	echo '[certbot] first run done'
+fi
