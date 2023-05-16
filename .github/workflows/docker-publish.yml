@@ -41,7 +41,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4.4.0
         with:
-          images: ${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       # For logging into the GitHub registry, we can use our GitHub token.
       - name: Log in to registry
@@ -62,7 +62,6 @@ jobs:
           # After a build, push the image to the registry.
           # NOTE: Don't use this for push requests!
           push: true
-          registry: ${{ env.REGISTRY }}
 
           # Labels and Tags come from the Metadata extraction.
           labels: ${{ steps.meta.outputs.labels }}
