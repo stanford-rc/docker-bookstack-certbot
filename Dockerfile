@@ -13,6 +13,7 @@ RUN \
   apk add certbot certbot-nginx && \
   echo '**** make symlinks ****' && \
   ln -s /config/log/letsencrypt /var/log/letsencrypt && \
+  ln -s /config/letsencrypt /etc/letsencrypt && \
   echo '**** make scripts executable ****' && \
   chmod a+x \
   /etc/periodic/daily/certbot \
