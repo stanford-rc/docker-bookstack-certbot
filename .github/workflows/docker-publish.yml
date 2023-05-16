@@ -64,8 +64,8 @@ jobs:
           push: true
 
           # Labels and Tags come from the Metadata extraction.
-          labels: ${{ steps.meta.output.labels }}
-          tags: ${{ steps.meta.output.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
 
           # Include information in the image to show where it came from.
           provenance: true
