@@ -81,7 +81,7 @@ fi
 
 # Now we can run Certbot!
 
-certbot run --verbose --non-interactive --cert-name bookstack \
+certbot certonly --verbose --non-interactive --cert-name bookstack \
 	--agree-tos -m "${LETS_ENCRYPT_CONTACT}" -d ${CERTBOT_DOMAIN} \
 	--webroot --webroot-path /app/www/public \
 	--user-agent-comment 'bookstack-certbot'
