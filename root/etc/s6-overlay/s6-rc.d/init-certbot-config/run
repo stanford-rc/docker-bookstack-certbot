@@ -7,10 +7,6 @@
 mkdir -p /config/letsencrypt
 mkdir -p /config/log/letsencrypt
 
-# Make a place in the Bookstack app's tree for the ACME challenge
-mkdir /app/www/public/.well-known
-mkdir /app/www/public/.well-known/acme-challenge
-
 if [ -n "${TEST_RUN}" ]; then
 	echo '[certbot] mkdir done.'
 fi
