@@ -52,15 +52,16 @@ if [[ ! "${APP_URL}" == https://* ]]; then
 fi
 
 # Strip the https:// prefix from the APP_URL, for further testing
-APP_URL_WITHOUT_PROTOCOL="${APP_URL/https:\/\/}"
+CERTBOT_DOMAIN="${APP_URL/https:\/\/}"
 if [ -n "${TEST_RUN}" ]; then
-	echo "[certbot] APP_URL after prefix strip: ${APP_URL_WITHOUT_PROTOCOL}"
+	echo "[certbot] APP_URL after prefix strip: ${CERTBOT_DOMAIN}"
 fi
 
-# Test for any forward-slashes
-if [[ "${APP_URL_WITHOUT_PROTOCOL}" == */* ]]; then
-	echo "ERROR: APP_URL may not contain slashes."
+# Test for any forward-slashes or port numbers
+if [[ "${CERTBOT_DOMAIN}" == *[:/]* ]]; then
+	echo "ERROR: APP_URL may not contain slashes or port numbers."
 	echo "NOTE: We can only work with Bookstack installs hosted at the root of a domain."
+	echo "NOTE: Also, only standard HTTP & HTTPS ports may be used."
 	exit 1
 fi
 
@@ -68,18 +69,7 @@ if [ -n "${TEST_RUN}" ]; then
 	echo '[certbot] env check done'
 fi
 
-# Extract domain from APP_URL
-
-# APP_URL_WITHOUT_PROTOCOL contains the URL with "https://" removed.
-# Also, we already know there are no forward-slashes
-
-# If we have a port number in the URL, remove that
-CERTBOT_DOMAIN="${APP_URL_WITHOUT_PROTOCOL/:*/}"
 echo "Will request a Let's Encrypt cert for ${CERTBOT_DOMAIN}"
-
-if [ -n "${TEST_RUN}" ]; then
-	echo '[certbot] domain derivation complete'
-fi
 
 # If we are doing testing, use the Let's Encrypt staging environment
 if [ -n "${TEST_RUN}" ]; then
