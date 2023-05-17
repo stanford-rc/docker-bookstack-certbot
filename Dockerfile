@@ -10,7 +10,7 @@ COPY root/ /
 # 
 RUN \
   echo '**** install certbot ****' && \
-  apk add certbot certbot-nginx && \
+  apk add certbot && \
   echo '**** make symlinks ****' && \
   ln -s /config/log/letsencrypt /var/log/letsencrypt && \
   ln -s /config/letsencrypt /etc/letsencrypt && \

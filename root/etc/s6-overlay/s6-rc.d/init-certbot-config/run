@@ -7,6 +7,10 @@
 mkdir -p /config/letsencrypt
 mkdir -p /config/log/letsencrypt
 
+# Make a place in the Bookstack app's tree for the ACME challenge
+mkdir /app/www/public/.well-known
+mkdir /app/www/public/.well-known/acme-challenge
+
 if [ -n "${TEST_RUN}" ]; then
 	echo '[certbot] mkdir done.'
 fi
@@ -81,13 +85,25 @@ fi
 
 certbot run --verbose --non-interactive --cert-name bookstack \
 	--agree-tos -m "${LETS_ENCRYPT_CONTACT}" -d ${CERTBOT_DOMAIN} \
-	--nginx --nginx-server-root /config/nginx \
+	--webroot --webroot-path /app/www/public \
 	--user-agent-comment 'bookstack-certbot'
 if [ $? -ne 0 ]; then
 	echo "ERROR: Certbot failed to run!"
 	echo "Look at the logs above, fix the issue, and re-create your container."
 	exit 1
 fi
+
+# If we're here, then issuance completed!
+
+# Change the Nginx SSL config to point to the new cert and key
+sed -i "s|^ssl_certificate .*|ssl_certificate /etc/letsencrypt/live/bookstack/fullchain.pem;|" /config/nginx/ssl.conf
+sed -i "s|ssl_certificate_key .*|ssl_certificate_key /etc/letsencrypt/live/bookstack/privkey.pem;|" /config/nginx/ssl.conf
+sed -i "s|#*ssl_trusted_certificate .*|ssl_trusted_certificate /etc/letsencrypt/live/bookstack/chain.pem;|" /config/nginx/ssl.conf
+sed -i "s|#*ssl_stapling .*|ssl_stapling on;|" /config/nginx/ssl.conf
+sed -i "s|#*ssl_stapling_verify .*|ssl_stapling_verify on;|" /config/nginx/ssl.conf
+
+# Reload Nginx
+nginx -c /config/nginx/nginx.conf -s reload
 
 # Done!
 

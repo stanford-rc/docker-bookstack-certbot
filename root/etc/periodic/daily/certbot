@@ -2,6 +2,6 @@
 
 echo "Running daily Certbot renewal check"
 exec /usr/bin/certbot renew --verbose --non-interactive --cert-name bookstack \
-    --nginx --nginx-server-root /config/nginx \
+    --webroot --webroot-path /app/www/public \
 	--user-agent-comment 'bookstack-certbot'
 
