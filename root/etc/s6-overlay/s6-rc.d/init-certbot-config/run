@@ -83,7 +83,7 @@ fi
 
 certbot certonly --verbose --non-interactive --cert-name bookstack \
 	--agree-tos -m "${LETS_ENCRYPT_CONTACT}" -d ${CERTBOT_DOMAIN} \
-	--webroot --webroot-path /app/www/public \
+	--webroot --webroot-path /app/www/public ${CERTBOT_STAGING} \
 	--user-agent-comment 'bookstack-certbot'
 if [ $? -ne 0 ]; then
 	echo "ERROR: Certbot failed to run!"
