@@ -68,7 +68,7 @@ fi
 echo "Will request a Let's Encrypt cert for ${CERTBOT_DOMAIN}"
 
 # If we are doing testing, use the Let's Encrypt staging environment
-if [ -n "${TEST_RUN}" ]; then
+if [ -n "${LETS_ENCRYPT_STAGING}" ]; then
 	echo "[certbot] Will use Let's Encrypt staging environment"
 	CERTBOT_STAGING='--test-cert'
 else
