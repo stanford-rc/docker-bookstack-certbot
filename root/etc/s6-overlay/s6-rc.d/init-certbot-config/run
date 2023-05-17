@@ -81,6 +81,14 @@ if [ -n "${TEST_RUN}" ]; then
 	echo '[certbot] domain derivation complete'
 fi
 
+# If we are doing testing, use the Let's Encrypt staging environment
+if [ -n "${TEST_RUN}" ]; then
+	echo "[certbot] Will use Let's Encrypt staging environment"
+	CERTBOT_STAGING='--test-cert'
+else
+	CERTBOT_STAGING=''
+fi
+
 # Now we can run Certbot!
 
 certbot run --verbose --non-interactive --cert-name bookstack \
