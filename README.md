@@ -42,7 +42,7 @@ Also, the following existing variables have changed:
 
   For example, `https://example.com` and `https://example.com:8080` are valid;
   but `https://example.com/`, `https://example.com:8080/`,
-  'https://example.com/app`, and `https://example.com:8080/app` are not
+  `https://example.com/app`, and `https://example.com:8080/app` are not
   allowed.
 
 ## Config Changes
