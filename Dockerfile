@@ -7,7 +7,7 @@ FROM lscr.io/linuxserver/bookstack:amd64-23.05.1
 #  * The periodic script (runs daily) to do a Certbot renewal
 COPY root/ /
 
-# 
+# Do all of our work
 RUN \
   echo '**** install certbot ****' && \
   apk add certbot && \
