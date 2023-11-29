@@ -7,6 +7,9 @@ With this image, you can have a Bookstack installation that automatically keeps
 its server certificate up-to-date.  Data (certs and logs) are kept in the
 `/config` path you already use.
 
+On first run, Certbot fetches a certificate from Let's Encrypt.  A `periodic`
+job is used to run Certbot, in renewal mode, once every day around 2 AM.
+
 ## Usage
 
 To use this container, you should follow the [Bookstack Usage
@@ -49,11 +52,13 @@ Also, the following existing variables have changed:
 
 With this container, several new things appear in your `/config` directory:
 
-* **Let's Encrypt Logs**: In `/config/logs/letsencrypt`, you will find
+* **Logs**: In `/config/logs/letsencrypt`, you will find
   Certbot's logs.  These will be log-rotated automatically.
 
-* **TBD**: In `/config/TBD`, you will find the TLS private key and certificate
-  chain for your site.  **Do not mess with these!**
+* **Data**: Let's Encrypt places all of its configuration inside
+  `/config/letsencrypt`.  This includes the live certificate chain, found in
+  `/config/letsencrypt/live/bookstack`.  **Do not mess with anything in this
+  directory!**
 
 ## Copyright & License
 
