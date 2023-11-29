@@ -15,7 +15,7 @@ with the following changes:
 
 ### Container Image
 
-You should pull your container image from here, instead of from Bookstack
+You should pull your container image from here, instead of from Bookstack.
 
 ### Variables
 
