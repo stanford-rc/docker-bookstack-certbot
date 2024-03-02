@@ -3,5 +3,6 @@
 echo "Running daily Certbot renewal check"
 exec /usr/bin/certbot renew --verbose --non-interactive --cert-name bookstack \
     --webroot --webroot-path /app/www/public \
-	--user-agent-comment 'bookstack-certbot'
+    --user-agent-comment 'bookstack-certbot' \
+    --deploy-hook 's6-svc -h /run/service/svc-nginx'
 
