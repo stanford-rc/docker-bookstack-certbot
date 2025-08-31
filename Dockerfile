@@ -1,7 +1,7 @@
 # vim: sw=2 ts=2 et
 
 # Start with the linuxserver bookstack container
-FROM lscr.io/linuxserver/bookstack:amd64-25.02.2
+FROM lscr.io/linuxserver/bookstack:amd64-25.07.2
 
 # Copy static files into the container:
 #  * The periodic script (runs daily) to do a Certbot renewal
