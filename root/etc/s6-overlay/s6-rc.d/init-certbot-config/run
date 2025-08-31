@@ -93,8 +93,6 @@ fi
 sed -i "s|^ssl_certificate .*|ssl_certificate /etc/letsencrypt/live/bookstack/fullchain.pem;|" /config/nginx/ssl.conf
 sed -i "s|ssl_certificate_key .*|ssl_certificate_key /etc/letsencrypt/live/bookstack/privkey.pem;|" /config/nginx/ssl.conf
 sed -i "s|#*ssl_trusted_certificate .*|ssl_trusted_certificate /etc/letsencrypt/live/bookstack/chain.pem;|" /config/nginx/ssl.conf
-sed -i "s|#*ssl_stapling .*|ssl_stapling on;|" /config/nginx/ssl.conf
-sed -i "s|#*ssl_stapling_verify .*|ssl_stapling_verify on;|" /config/nginx/ssl.conf
 
 # Reload Nginx
 nginx -c /config/nginx/nginx.conf -s reload
